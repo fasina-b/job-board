@@ -1,0 +1,35 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int      @id @default(autoincrement())
+  userid      String   @unique
+  firstname   String
+  lastname    String
+  email       String   @unique
+  password    String
+  dateCreated DateTime @default(now())
+  role        String
+  jobs        Job[]    @relation("JobCreatedBy")
+}
+
+model Job {
+  id          Int      @id @default(autoincrement())
+  title       String
+  company     String
+  job_area    String
+  description String
+  salary      String
+  experience  String
+  dateCreated DateTime @default(now())
+  job_type    String
+  createdBy   User     @relation("JobCreatedBy", fields: [createdByEmail], references: [email])
+  createdByEmail String @default("user@example.com") // Use a default value that makes sense in your context
+}
+
